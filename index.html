@@ -391,13 +391,13 @@ async function login() {
         if (isValid) {
             sessionStorage.setItem('isLoggedIn', 'true');
             document.getElementById('insertButton').disabled = false;
-            alert('âœ… Accesso riuscito!');
+            alert('Accesso riuscito!');
         } else {
-            alert('âš ï¸ Credenziali errate!');
+            alert('Credenziali errate!');
         }
     } catch (error) {
         console.error('Errore login:', error);
-        alert('âš ï¸ Errore durante il login');
+        alert('Errore durante il login');
     }
 }
 </script>
