@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controllo Radioattivit&agrave;</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: lightgray;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin: auto;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    /* Per gli input che devono avere una larghezza minore */
+    .input-small {
+      max-width: 100px;
+    }
+    .btn {
+      width: 100%;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      border: none;
+      margin-top: 15px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    button {
+      background-color: #4CAF50; /* Verde */
+      color: white;
+      font-size: 16px;
+      padding: 15px 32px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    .center-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .message {
+      display: none;
+      padding: 10px;
+      margin-top: 20px;
+      border-radius: 5px;
+      text-align: center;
+    }
+    .success {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    /* Rendi le immagini responsive */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+    /* Media Query per dispositivi mobili */
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+      .container {
+        padding: 15px;
+      }
+      h1, h2 {
+        font-size: 1.5em;
+      }
+      input, select {
+        padding: 8px;
+      }
+      button {
+        padding: 12px 24px;
+      }
+      /* In caso di righe di input affiancate, utilizza flex-wrap */
+      .flex-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <img src="https://github.com/XFLYRACER/CATENABETA/blob/main/252px-Stemma_vvf_vda.jpg?raw=true" alt="Stemma Vigili del Fuoco" width="100">
+  <h1>CONTROLLO RADIATTIVITA' AMBIENTALE</h1>
+  <h2>Inserimento dati nuova lettura</h2>
+  <button onclick="window.location.href='index.html';">TORNA ALLA HOME</button>
+  
+  <form id="modulo">
+    <label for="OPERATORE">Operatore</label>
+    <input type="text" id="OPERATORE" name="OPERATORE" required >
+
+    <label for="LUOGO">Luogo del Prelievo</label>
+    <input type="text" id="LUOGO" name="LUOGO"  required>
+
+    <label for="DATA">Data Prelievo</label>
+    <input type="date" id="DATA" name="DATA"  required>
+
+    <label for="ORA">Ora Prelievo</label>
+    <input type="time" id="ORA" name="ORA"  required>
+
+    <label for="VOLUME">Volume Aspirato (Mc)</label>
+    <input type="number" step="0.001" id="VOLUME" name="VOLUME" value="4" class="input-small">
+
+    <label for="TEMPERATURA">Temperatura (Â°C)</label>
+    <input type="number" step="0.001" id="TEMPERATURA" name="TEMPERATURA" class="input-small"  required>
+
+    <label for="PRESSIONE">Pressione (hPa)</label>
+    <input type="number" step="0.001" id="PRESSIONE" name="PRESSIONE" class="input-small"  required>
+
+    <label for="UMIDITA">Umidit&agrave; (%)</label>
+    <input type="number" step="0.001" id="UMIDITA" name="UMIDITA" class="input-small"  required>
+
+    <label for="VENTO">Vento</label>
+    <select id="VENTO" name="VENTO">
+      <option value="ASSENTE">Assente</option>
+      <option value="MODERATO">Moderato</option>
+      <option value="FORTE">Forte</option>
+    </select>
+
+    <label for="TEMPO">Condizioni Meteo</label>
+    <select id="TEMPO" name="TEMPO">
+      <option value="SERENO">Sereno</option>
+      <option value="NUVOLOSO">Nuvoloso</option>
+      <option value="PIOGGIA">Pioggia</option>
+    </select>
+
+    <label for="MANOMETRO">Manometro Pompa (cm/hg)</label>
+    <input type="number" step="0.001" id="MANOMETRO" name="MANOMETRO" class="input-small">
+
+    <label>Misura Pozzetto a Vuoto</label>
+    <label for="MEDIAVUOTO">Media delle misure</label>
+    <input type="number" step="0.001" id="MEDIAVUOTO" name="MEDIAVUOTO" class="input-small" style="background-color: yellow"  required>
+
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="VUOTO1" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO2" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO3" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO4" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO5" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+    </div>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="VUOTO6" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO7" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO8" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO9" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+      <input type="number" step="0.001" class="input-small" name="VUOTO10" oninput="calcolaMedia('VUOTO', 'MEDIAVUOTO')">
+    </div>
+
+    <label>Misura dopo l'aspirazione 1a lettura filtro Bianco</label>
+    <label for="BIANCOMEDIA1">Media delle misure</label>
+    <input type="number" step="0.001" id="BIANCOMEDIA1" name="BIANCOMEDIA1" class="input-small" style="background-color: yellow"  required>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO1" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO2" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO3" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO4" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO5" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+    </div>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO6" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO7" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO8" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO9" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+      <input type="number" step="0.001" class="input-small" name="UNOBIANCO10" oninput="calcolaMedia('UNOBIANCO', 'BIANCOMEDIA1')">
+    </div>
+
+    <label>Misura 2h dopo l'aspirazione 2a lettura filtro Bianco</label>
+    <label for="BIANCOMEDIA2">Media delle misure</label>
+    <input type="number" step="0.001" id="BIANCOMEDIA2" name="BIANCOMEDIA2" class="input-small" style="background-color: yellow" required>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO1" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO2" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO3" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO4" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO5" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+    </div>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO6" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO7" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO8" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO9" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+      <input type="number" step="0.001" class="input-small" name="DUEBIANCO10" oninput="calcolaMedia('DUEBIANCO', 'BIANCOMEDIA2')">
+    </div>
+
+    <label>Misura filtro Nero</label>
+    <label for="NERO">Media delle misure</label>
+    <input type="number" step="0.001" id="NERO" name="NERO" class="input-small" style="background-color: yellow">
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO1" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO2" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO3" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO4" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO5" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+    </div>
+    <div class="flex-row">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO6" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO7" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO8" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO9" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+      <input type="number" step="0.001" class="input-small" name="FILTRONERO10" oninput="calcolaMedia('FILTRONERO', 'NERO')">
+    </div>
+
+    <p>
+      <strong>NB.</strong> LA LETTURA DEL FILTRO NERO VA EFFETTUATA SOLAMENTE PER AVERE DEI VALORI DI RIFERIMENTO OPPURE NEL CASO CHE I VALORI DEL FILTRO BIANCO IN SECONDA LETTURA NON SI SIANO ALMENO DIMEZZATI.<br>
+      <strong>DA FARE IN OGNI CASO IL PRIMO VENERD&grave; DEL MESE.</strong>
+    </p>
+
+    <p><strong>Created by BELLEY Ver 1.25.</strong></p>
+
+    <button class="btn" type="submit">Invia Dati</button>
+  </form>
+
+  <div id="successo" class="message success">Dati inviati con successo!</div>
+  <div id="errore" class="message error">Si &egrave; verificato un errore durante l'invio dei dati.</div>
+</div>
+
+<script>
+function calcolaMedia(prefix, outputId) {
+  let valori = document.querySelectorAll(`[name^="${prefix}"]`);
+  let somma = 0;
+  let count = 0;
+  
+  valori.forEach(input => {
+    let valore = parseFloat(input.value);
+    if (!isNaN(valore)) {
+      somma += valore;
+      count++;
+    }
+  });
+  
+  let media = count > 0 ? (somma / count).toFixed(3) : "0.000";
+  document.getElementById(outputId).value = media;
+}
+
+document.getElementById('modulo').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const url = 'https://script.google.com/macros/s/AKfycbxPbXku_N7SHfMMR_E5LIUxc2H4e9KdZ6XT8GwOLAL5Xr6azdUiRz4RrT2mapOHPuIu/exec';
+  const formData = new URLSearchParams(new FormData(e.target));
+  
+  // Converti i numeri nel formato con virgola
+  formData.forEach((value, key) => {
+    if (!isNaN(value) && value.includes('.')) {
+      formData.set(key, value.replace('.', ','));
+    }
+  });
+  
+  console.log("Dati inviati:", Object.fromEntries(formData));
+  
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      redirect: 'follow'
+    });
+    
+    if (!response.ok) throw new Error(`Errore HTTP! Status: ${response.status}`);
+    
+    const result = await response.json();
+    console.log("Risposta ricevuta:", result);
+    
+
+    if (result.result === 'success' || result.message === 'Dati salvati correttamente') {
+  alert('âœ… Dati inviati con successo! - Puoi tornare alla HOME');
+  e.target.reset();
+} else {
+  alert(`âš ï¸ Errore: ${result.message || 'Errore sconosciuto'}`);
+}
+
+
+  } catch (error) {
+    console.error('Errore completo:', error);
+    alert(`âš ï¸ Errore: ${error.message}`);
+  }
+});
+
+</script>
+
+</body>
+</html>

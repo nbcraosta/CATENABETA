@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controllo Radioattivit&agrave;</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightgray;
+            margin: 0;
+            padding: 10px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1700px;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: auto;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .btn {
+            width: 100%;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        button {
+            background-color: #4CAF50; /* Colore di sfondo (verde) */
+            color: white; /* Colore del testo */
+            font-size: 16px; /* Dimensione del testo */
+            padding: 15px 32px; /* Distanza interna (verticale e orizzontale) */
+            border: none; /* Nessun bordo */
+            border-radius: 8px; /* Angoli arrotondati */
+            cursor: pointer; /* Cambia il cursore al passaggio sopra */
+            transition: background-color 0.3s; /* Transizione per l'effetto hover */
+        }
+        button:hover {
+            background-color: #45a049; /* Colore piÃ¹ scuro al passaggio del mouse */
+        }
+        .center-button {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Occupa tutta l'altezza della finestra */
+        }
+        /* Contenitore per tabelle responsive */
+        .table-responsive {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table th, table td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        canvas {
+            width: 100%;
+            height: 400px;
+            margin-top: 20px;
+        }
+        /* Media Query per dispositivi mobili */
+        @media (max-width: 768px) {
+            body {
+                padding: 5px;
+            }
+            .container {
+                padding: 10px;
+            }
+            h1, h2 {
+                font-size: 1.5em;
+            }
+            canvas {
+                height: 250px;
+            }
+        }
+        /* Rendi le immagini responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+   /* Aggiungi questo stile per il login */
+ 
+   .login-container {
+            position:relative;
+          top: 10px;
+         right: 10px;
+        background: white;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            float: right;
+        }
+   
+        .login-input {
+            margin: 5px;
+            padding: 10px;
+            width: 150px;
+            //float: right;
+            border-radius: 5px;
+        }
+        button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+button:disabled:hover {
+    background-color: #cccccc;
+}
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://github.com/XFLYRACER/CATENABETA/blob/main/252px-Stemma_vvf_vda.jpg?raw=true" alt="Stemma Vigili del Fuoco" width="100">
+    
+    
+    <div class="login-container">
+        
+        
+               
+    </div>
+   
+    
+    <h1>COMANDO REGIONALE VIGILI DEL FUOCO VALLE D'AOSTA</h1>
+    <h2>CONTROLLO RADIOATTIVITA' AMBIENTALE</h2>
+
+    <div>
+        <h2>---------------------</h2>
+
+    </div>
+
+ 
+  <button id="insertButton" onclick="window.location.href='inserimento.html';" disabled>INSERISCI NUOVI DATI</button>
+
+        <input type="text" id="username" class="login-input" placeholder="User ID">
+        <input type="password" id="password" class="login-input" placeholder="Password">
+        <button onclick="login()">Accedi</button>
+    
+
+    <div class="table-responsive">
+        <table id="data-table" border="3" cellspacing="0" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>OPERATORE</th>
+                    <th>DATA DI PRELIEVO </th>
+                    <th>LUOGO</th>
+                    <th>ORA</th>
+                    <th>POZZETTO VUOTO</th>
+                    <th>FILTRO BIANCO 1a</th>
+                    <th>FILTRO BIANCO 2a</th>
+                    <th>FILTRO NERO</th>
+                    <th>VOLUME ASPIRATO</th>
+                    <th>TEMPERATURA</th>
+                    <th>PRESSIONE</th>
+                    <th>UMIDITA</th>
+                    <th>VENTO</th>
+                    <th>METEO</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    
+    <canvas id="myChart"></canvas>
+    <p><strong>Created by J.M. BELLEY Ver 2.01.</strong></p>
+</div>
+
+<script>
+    let myChart = null; // Variabile per il grafico
+    
+  
+           async function loadSheetData() {
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxZc3celUdPQ6qyJhN_aSkQ89__weMrzck2XPtuybsscHNWIb4WxduUBOBky7d2mvSe/exec");
+
+        // Verifica se la risposta Ã¨ ok
+        if (!response.ok) {
+            throw new Error(`Errore nella risposta: ${response.status}`);
+        }
+
+        const json = await response.json();
+        
+        // Controlla se la risposta contiene i dati attesi
+        console.log("Dati ricevuti:", json);
+        
+        if (json.success !== true || !json.data) {
+            throw new Error("Dati non validi ricevuti");
+        }
+
+        const rows = json.data;
+        const last10Rows = rows.slice(-10);
+
+        const labels = [];
+            const dataFiltroBianco1a = [];
+            const dataFiltroBianco2a = [];
+            const dataFiltroNero = [];
+            const dataTemperatura = [];
+            const dataPressione = [];
+        
+        // Stampa le ultime 10 righe
+        console.log("Ultime 10 righe:", last10Rows);
+
+        // Aggiungi i dati alla tabella
+        const tableBody = document.querySelector('#data-table tbody');
+        tableBody.innerHTML = "";
+
+        last10Rows.forEach(row => {
+            if (row.length >= 14) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td>${row[5]}</td>
+                                <td>${row[6]}</td>
+                                <td>${row[7]}</td>
+                                <td>${row[8]}</td>
+                                <td>${row[9]}</td>
+                                <td>${row[10]}</td>
+                                <td>${row[11]}</td>
+                                <td>${row[12]}</td>
+                                <td>${row[13]}</td>
+                                <td>${row[14]}</td>`;
+                tableBody.appendChild(tr);
+                      // Utilizza la seconda colonna (DATA) come etichetta
+                      labels.push(row[2]);
+                    // Dati per il grafico dai filtri specifici
+                    dataFiltroBianco1a.push(parseFloat(row[6]) || 0);
+                    dataFiltroBianco2a.push(parseFloat(row[7]) || 0);
+                    dataFiltroNero.push(parseFloat(row[8]) || 0);
+                    dataTemperatura.push(parseFloat(row[10]) || 0);
+                     dataPressione.push(parseFloat(row[11]) || 0);
+
+
+            }
+        });
+
+   
+
+            // Crea il grafico con i dati raccolti
+        createChart(labels, dataFiltroBianco1a, dataFiltroBianco2a, dataFiltroNero, dataTemperatura, dataPressione);
+    } catch (error) {
+        console.error("Errore nel caricamento dei dati:", error);
+    }
+}
+
+    function createChart(labels, dataFiltroBianco1a, dataFiltroBianco2a, dataFiltroNero,dataTemperatura,dataPressione) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+
+        // Distrugge il vecchio grafico se esiste
+        if (myChart !== null) {
+            myChart.destroy();
+        }
+
+       myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'FILTRO BIANCO 1a',
+                        data: dataFiltroBianco1a,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'FILTRO BIANCO 2a',
+                        data: dataFiltroBianco2a,
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'FILTRO NERO',
+                        data: dataFiltroNero,
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                        borderWidth: 2,
+                        fill: true,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'TEMPERATURA (Â°C)',
+                        data: dataTemperatura,
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'PRESSIONE (hPa)',
+                        data: dataPressione,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'DATA'
+                        }
+                    },
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Valori Filtri CPS /Temperatura (Â°C)'
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Pressione (hPa)'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+
+    // Carica i dati all'avvio della pagina
+    loadSheetData();
+
+//////////////////////////////////////////////////////////////
+
+
+const LOGIN_SHEET_NAME = 'Login';
+
+
+async function login() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyFnTWctvInccAzxg2Yu3rNVFufKter2ifBtOv5Jr-Jpa06_eRZAAG3sljW20UFkfNA/exec");
+        if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
+
+        const json = await response.json();
+        
+        // Verifica la struttura dei dati
+        if (json.success !== true || !json.data) {
+            throw new Error("Dati non validi ricevuti");
+        }
+
+       const rows = json.data.slice(0); // Ignora l'header
+
+        const isValid = rows.some(row => row[0] === username && row[1] === password);
+
+        if (isValid) {
+            sessionStorage.setItem('isLoggedIn', 'true');
+            document.getElementById('insertButton').disabled = false;
+            alert('âœ… Accesso riuscito!');
+        } else {
+            alert('âš ï¸ Credenziali errate!');
+        }
+    } catch (error) {
+        console.error('Errore login:', error);
+        alert('âš ï¸ Errore durante il login');
+    }
+}
+</script>
+
+</body>
+</html>
