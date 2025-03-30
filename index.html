@@ -394,6 +394,7 @@ async function login() {
             alert('Accesso riuscito!');
         } else {
             alert('Credenziali errate!');
+            document.getElementById('insertButton').disabled = false;
         }
     } catch (error) {
         console.error('Errore login:', error);
