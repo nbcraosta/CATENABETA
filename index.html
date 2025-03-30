@@ -386,6 +386,7 @@ async function login() {
 
        const rows = json.data.slice(0); // Ignora l'header
 
+         console.log(username,password);
         const isValid = rows.some(row => row[0] === username && row[1] === password);
 
         if (isValid) {
