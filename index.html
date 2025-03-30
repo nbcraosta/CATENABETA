@@ -193,7 +193,7 @@ button:disabled:hover {
   
            async function loadSheetData() {
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbxZc3celUdPQ6qyJhN_aSkQ89__weMrzck2XPtuybsscHNWIb4WxduUBOBky7d2mvSe/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbwkC-RJilKncqY_HONuHpzLlcWDpmiOJSnYeJNmUJtsQOruNiB1L7qa9p5h9aBxlrMh/exec"); // deployment caricabeta
 
         // Verifica se la risposta Ã¨ ok
         if (!response.ok) {
@@ -374,7 +374,7 @@ async function login() {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyFnTWctvInccAzxg2Yu3rNVFufKter2ifBtOv5Jr-Jpa06_eRZAAG3sljW20UFkfNA/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxTwBrWdzWyIxaVxOhKEEgYm2vbiyH520rznrdwIYJSanzrrYLgKTdK4ZBSPsd0kxDD/exec");    // deployment login
         if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
 
         const json = await response.json();
