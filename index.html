@@ -372,7 +372,7 @@ const LOGIN_SHEET_NAME = 'Login';
 async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    console.log('username','password');
+    console.log(username,password);
     try {
         const response = await fetch("https://script.google.com/macros/s/AKfycbyel7dQA_jr1rWYgLtr3HEb7szdzmXXz2CGZcHL9P7_D-ODUCLw4gu2zvx_JQMwkj3u/exec");    // deployment login
         if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
