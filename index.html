@@ -398,6 +398,7 @@ async function login() {
     } catch (error) {
         console.error('Errore login:', error);
         alert('Errore durante il login');
+        document.getElementById('insertButton').disabled = false;
     }
 }
 </script>
