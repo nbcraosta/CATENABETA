@@ -368,48 +368,26 @@ button:disabled:hover {
 async function login() {
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
-    
-    if (!username || !password) {
-        alert('Inserisci sia username che password');
-        return;
-    }
 
     try {
-        // Hash della password prima dell'invio (SHA-256)
-        const hashedPassword = await sha256(password);
-        
-        // ⚠️ SOSTITUISCI QUESTO URL CON IL TUO DEPLOYMENT ⚠️
-        const DEPLOYMENT_URL = "https://script.google.com/macros/s/AKfycbxJOXELYeyYEdSHL7JIwNI_4l5hb-Homv_c_A56Z7jULfzh9pFe9bD7JdIFvipRnow/exec";
-        
+        const DEPLOYMENT_URL = "https://script.google.com/macros/s/AKfycbz9rDDAlLClTz9IL9A9edFxi4VgeUiGlChtj-yAPJJJ99Hlne-ijTeKRZGEN4ux0Sfg/exec";
         const response = await fetch(DEPLOYMENT_URL, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ username, password: hashedPassword }),
-            mode: "no-cors" // Necessario per evitare errori CORS
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password }),
+            // mode: "no-cors" // Usa solo se necessario (ma nasconde gli errori)
         });
 
         const result = await response.json();
-        
         if (result.success) {
-            sessionStorage.setItem('isLoggedIn', 'true');
-            window.location.href = 'dashboard.html'; // Reindirizza dopo il login
+            alert("Accesso riuscito!");
         } else {
-            alert(result.message || 'Credenziali errate!');
+            alert("Credenziali errate!");
         }
     } catch (error) {
-        console.error('Errore durante il login:', error);
-        alert('Errore di connessione. Riprova più tardi.');
+        console.error("Errore:", error);
+        alert("Errore durante il login.");
     }
-}
-
-// Funzione per hash SHA-256 (lato browser)
-async function sha256(message) {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
 </script>
