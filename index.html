@@ -379,7 +379,7 @@ async function login() {
         const hashedPassword = await sha256(password);
         
         // ⚠️ SOSTITUISCI QUESTO URL CON IL TUO DEPLOYMENT ⚠️
-        const DEPLOYMENT_URL = "https://script.google.com/macros/s/AKfycbyJpD09PCQH0cR77FxvCo1f-bGR0JePX_3F7hK2w99_YUKAay83Mk97x_YInooEaU8z/exec";
+        const DEPLOYMENT_URL = "https://script.google.com/macros/s/AKfycbxJOXELYeyYEdSHL7JIwNI_4l5hb-Homv_c_A56Z7jULfzh9pFe9bD7JdIFvipRnow/exec";
         
         const response = await fetch(DEPLOYMENT_URL, {
             method: "POST",
