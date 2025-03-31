@@ -365,44 +365,53 @@ button:disabled:hover {
 
 //////////////////////////////////////////////////////////////
 
-
-const LOGIN_SHEET_NAME = 'Login';
-
-
 async function login() {
-    const username = document.getElementById('username').value;
+    const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
-    console.log(username,password);
+    
+    if (!username || !password) {
+        alert('Inserisci sia username che password');
+        return;
+    }
+
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbyKaQ_QJkEEC97CLGQtEUqkznPBCJc2BvxFJD-BFFyvrR3Xe2j1hTnK_nn5XIlZ_ZMh/exec");    // deployment login
-        if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
-
-        const json = await response.json();
+        // Hash della password prima dell'invio (SHA-256)
+        const hashedPassword = await sha256(password);
         
-        // Verifica la struttura dei dati
-        if (json.success !== true || !json.data) {
-            throw new Error("Dati non validi ricevuti");
-        }
+        // ⚠️ SOSTITUISCI QUESTO URL CON IL TUO DEPLOYMENT ⚠️
+        const DEPLOYMENT_URL = "https://script.google.com/macros/s/AKfycbyJpD09PCQH0cR77FxvCo1f-bGR0JePX_3F7hK2w99_YUKAay83Mk97x_YInooEaU8z/exec";
+        
+        const response = await fetch(DEPLOYMENT_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, password: hashedPassword }),
+            mode: "no-cors" // Necessario per evitare errori CORS
+        });
 
-       const rows = json.data.slice(0); // Ignora l'header
-
-         
-        const isValid = rows.some(row => row[0] === username && row[1] === password);
-
-        if (isValid) {
+        const result = await response.json();
+        
+        if (result.success) {
             sessionStorage.setItem('isLoggedIn', 'true');
-            document.getElementById('insertButton').disabled = false;
-            alert('Accesso riuscito!');
+            window.location.href = 'dashboard.html'; // Reindirizza dopo il login
         } else {
-            alert('Credenziali errate!');
-            
+            alert(result.message || 'Credenziali errate!');
         }
     } catch (error) {
-        console.error('Errore login:', error);
-        alert('Errore durante il login');
-        
+        console.error('Errore durante il login:', error);
+        alert('Errore di connessione. Riprova più tardi.');
     }
 }
+
+// Funzione per hash SHA-256 (lato browser)
+async function sha256(message) {
+    const msgBuffer = new TextEncoder().encode(message);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
 </script>
 
 </body>
