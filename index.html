@@ -375,7 +375,7 @@ async function login() {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password }),
-            // mode: "no-cors" // Usa solo se necessario (ma nasconde gli errori)
+            mode: "no-cors" // Usa solo se necessario (ma nasconde gli errori)
         });
 
         const result = await response.json();
