@@ -365,17 +365,14 @@ button:disabled:hover {
 
 //////////////////////////////////////////////////////////////
 
-
-
 const LOGIN_SHEET_NAME = 'Login';
 
-
-async function login() {
+    async function login() {
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzcflqSulCO_-5XGCseZKTJkxfm-9T-7j-zncYKQRI4aJxCpoA-x0w_GnPh_LGtVhYx/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyjTkbwgGbpFpLZdrHGP4MAhsFH2Y3zeQlH9hhw5AGSril18Rj20vpx8esIiVz3MH9L/exec");
         if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
 
         const json = await response.json();
@@ -389,14 +386,6 @@ async function login() {
 
         const isValid = rows.some(row => row[0] === username && row[1] === password);
 
-       //////////////////////////
-console.log("--- Tutte le righe nel database ---");
-rows.forEach((row, index) => {
-    console.log(`Riga ${index + 1}: Username='${row[0]}', Password='${row[1]}'`);
-});
-
-        ////////////////////////
-
         if (isValid) {
             sessionStorage.setItem('isLoggedIn', 'true');
             document.getElementById('insertButton').disabled = false;
@@ -409,6 +398,39 @@ rows.forEach((row, index) => {
         alert('âš ï¸ Errore durante il login');
     }
 }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+       //////////////////////////
+console.log("--- Tutte le righe nel database ---");
+rows.forEach((row, index) => {
+    console.log(`Riga ${index + 1}: Username='${row[0]}', Password='${row[1]}'`);
+});
+
+        ////////////////////////
+
+       
 </script>
 
 </body>
