@@ -281,6 +281,12 @@ function calcolaMedia(prefix, outputId) {
 document.getElementById('modulo').addEventListener('submit', async (e) => {
   e.preventDefault();
   
+  // Disabilita il pulsante di invio
+  const submitButton = document.querySelector('.btn[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = 'Invio in corso...';
+  submitButton.style.backgroundColor = '#6c757d'; // Colore grigio per indicare disabilitato
+  
   const url = 'https://script.google.com/macros/s/AKfycbwT4Ej8swHBgIqgOrsd23j0M1lJ0G2f0kznHxzGdhPl3RFFwhhn_1xTFywdwm80mZ0f/exec'; //deployment salvabeta
   const formData = new URLSearchParams(new FormData(e.target));
   
@@ -306,18 +312,21 @@ document.getElementById('modulo').addEventListener('submit', async (e) => {
     const result = await response.json();
     console.log("Risposta ricevuta:", result);
     
-
     if (result.result === 'success' || result.message === 'Dati salvati correttamente') {
-  alert('Dati inviati con successo! - Puoi tornare alla HOME');
-  e.target.reset();
-} else {
-  alert(`Errore: ${result.message || 'Errore sconosciuto'}`);
-}
-
-
+      alert('Dati inviati con successo! - Puoi tornare alla HOME');
+      e.target.reset();
+    } else {
+      alert(`Errore: ${result.message || 'Errore sconosciuto'}`);
+    }
+    
   } catch (error) {
     console.error('Errore completo:', error);
     alert(`Errore: ${error.message}`);
+  } finally {
+    // Riabilita il pulsante indipendentemente dall'esito
+    submitButton.disabled = false;
+    submitButton.textContent = 'Invia Dati';
+    submitButton.style.backgroundColor = '#007BFF'; // Ripristina colore originale
   }
 });
 
