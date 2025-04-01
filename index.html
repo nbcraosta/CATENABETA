@@ -389,25 +389,18 @@ const LOGIN_SHEET_NAME = 'Login';
         if (isValid) {
             sessionStorage.setItem('isLoggedIn', 'true');
             document.getElementById('insertButton').disabled = false;
-            alert('âœ… Accesso riuscito!');
+            alert('Accesso riuscito!');
         } else {
-            alert('âš ï¸ Credenziali errate!');
+            alert('Credenziali errate!');
         }
     } catch (error) {
         console.error('Errore login:', error);
-        alert('âš ï¸ Errore durante il login');
+        alert('Errore durante il login');
     }
 }
    
 
- /*      //////////////////////////
-console.log("--- Tutte le righe nel database ---");
-rows.forEach((row, index) => {
-    console.log(`Riga ${index + 1}: Username='${row[0]}', Password='${row[1]}'`);
-});
 
-        ////////////////////////
-*/
        
 </script>
 
