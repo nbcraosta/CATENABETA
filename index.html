@@ -389,6 +389,10 @@ async function login() {
 
         const isValid = rows.some(row => row[0] === username && row[1] === password);
 
+        console.log("--- Tutte le righe nel database ---");
+        rows.forEach((row, index) => {
+        console.log(`Riga ${index + 1}: Username='${row[0]}', Password='${row[1]}'`);
+
         if (isValid) {
             sessionStorage.setItem('isLoggedIn', 'true');
             document.getElementById('insertButton').disabled = false;
