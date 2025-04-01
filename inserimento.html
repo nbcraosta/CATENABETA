@@ -308,16 +308,16 @@ document.getElementById('modulo').addEventListener('submit', async (e) => {
     
 
     if (result.result === 'success' || result.message === 'Dati salvati correttamente') {
-  alert('âœ… Dati inviati con successo! - Puoi tornare alla HOME');
+  alert('Dati inviati con successo! - Puoi tornare alla HOME');
   e.target.reset();
 } else {
-  alert(`âš ï¸ Errore: ${result.message || 'Errore sconosciuto'}`);
+  alert(`Errore: ${result.message || 'Errore sconosciuto'}`);
 }
 
 
   } catch (error) {
     console.error('Errore completo:', error);
-    alert(`âš ï¸ Errore: ${error.message}`);
+    alert(`Errore: ${error.message}`);
   }
 });
 
