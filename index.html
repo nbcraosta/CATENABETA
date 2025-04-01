@@ -375,7 +375,7 @@ async function login() {
     const password = document.getElementById('password').value;
 
     try {
-        const response = await fetch("https://script.google.com/macros/s/AKfycbzne654_acc5zB9nARax6JQzifg_pPDYxrD0Ap1Hus0PT0CokOkv56BjQyB_Rgp7GYx/exec");
+        const response = await fetch("https://script.google.com/macros/s/AKfycbyTCfZFu-UQNSQ5ET2kVgkd9-IF_8vIAbn3nY2gtCPisX7kagUaWq73HxMUwpcj8AGc/exec");
         if (!response.ok) throw new Error("Errore nel recupero delle credenziali");
 
         const json = await response.json();
