@@ -157,7 +157,7 @@
   <datalist id="comuniAosta">
     <option value="Aosta">
     <option value="Allein">
-    <option value="Antey-Saint-AndrÃ©">
+    <option value="Antey-Saint-André">
     <option value="Arnad">
     <option value="Arvier">
     <option value="Avise">
@@ -174,25 +174,25 @@
     <option value="Champdepraz">
     <option value="Champorcher">
     <option value="Charvensod">
-    <option value="ChÃ¢tillon">
+    <option value="Châtillon">
     <option value="Cogne">
     <option value="Courmayeur">
     <option value="Donnas">
     <option value="Doues">
-    <option value="Ã‰marÃ¨se">
-    <option value="Ã‰troubles">
-    <option value="FÃ©nis">
+    <option value="Émarèse">
+    <option value="Étroubles">
+    <option value="Fénis">
     <option value="Fontainemore">
     <option value="Gaby">
     <option value="Gignod">
     <option value="Gressan">
-    <option value="Gressoney-La-TrinitÃ©">
+    <option value="Gressoney-La-Trinité">
     <option value="Gressoney-Saint-Jean">
-    <option value="HÃ´ne">
+    <option value="Hône">
     <option value="Introd">
     <option value="Issime">
     <option value="Issogne">
-    <option value="JovenÃ§an">
+    <option value="Jovençan">
     <option value="La Magdeleine">
     <option value="La Salle">
     <option value="La Thuile">
@@ -207,10 +207,10 @@
     <option value="Pontboset">
     <option value="Pontey">
     <option value="Pont-Saint-Martin">
-    <option value="PrÃ©-Saint-Didier">
+    <option value="Pré-Saint-Didier">
     <option value="Quart">
-    <option value="RhÃªmes-Notre-Dame">
-    <option value="RhÃªmes-Saint-Georges">
+    <option value="Rhêmes-Notre-Dame">
+    <option value="Rhêmes-Saint-Georges">
     <option value="Roisan">
     <option value="Saint-Christophe">
     <option value="Saint-Denis">
@@ -218,7 +218,7 @@
     <option value="Saint-Nicolas">
     <option value="Saint-Oyen">
     <option value="Saint-Pierre">
-    <option value="Saint-RhÃ©my-en-Bosses">
+    <option value="Saint-Rhémy-en-Bosses">
     <option value="Saint-Vincent">
     <option value="Sarre">
     <option value="Torgnon">
@@ -226,10 +226,10 @@
     <option value="Valpelline">
     <option value="Valsavarenche">
     <option value="Verrayes">
-    <option value="VerrÃ¨s">
+    <option value="Verrès">
     <option value="Villeneuve">
   </datalist>
-  <span id="luogoStatus" style="margin-left: 10px; display: none;">âš ï¸</span>
+  <span id="luogoStatus" style="margin-left: 10px; display: none;">⚠️</span>
 </div>
 
     <!-- Pulsante per caricare i dati meteo -->
@@ -245,7 +245,7 @@
     <label for="VOLUME">Volume Aspirato (Mc)</label>
     <input type="number" step="0.001" id="VOLUME" name="VOLUME" value="4" class="input-small">
 
-    <label for="TEMPERATURA">Temperatura (Ã‚Â°C)</label>
+    <label for="TEMPERATURA">Temperatura (Â°C)</label>
     <input type="number" step="0.001" id="TEMPERATURA" name="TEMPERATURA" class="input-small"  required>
 
     <label for="PRESSIONE">Pressione (hPa)</label>
@@ -452,9 +452,9 @@ async function caricaDatiMeteo() {
   const luogoInput = document.getElementById('LUOGO').value;
   const statusIcon = document.getElementById('luogoStatus');
 
-  // 1. Verifica validitÃ  luogo
-  if (statusIcon.textContent === 'âŒ') {
-    alert("LocalitÃ  non valida! Correggi il nome o seleziona dalla lista.");
+  // 1. Verifica validità luogo
+  if (statusIcon.textContent === '❌') {
+    alert("Località non valida! Correggi il nome o seleziona dalla lista.");
     return;
   }
 
@@ -506,7 +506,7 @@ document.getElementById('LUOGO').addEventListener('change', async function() {
     return;
   }
 
-  // 1. Verifica se Ã¨ nella lista ufficiale
+  // 1. Verifica se è nella lista ufficiale
   const comuni = Array.from(document.getElementById('comuniAosta').options).map(opt => opt.value);
   if (comuni.includes(input)) {
     statusIcon.style.display = 'none';
@@ -515,7 +515,7 @@ document.getElementById('LUOGO').addEventListener('change', async function() {
 
   // 2. Geocoding di verifica
   try {
-    statusIcon.textContent = 'ðŸ”';
+    statusIcon.textContent = '🔍';
     statusIcon.style.display = 'inline';
     
     const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(input + ', Italia')}&format=json&limit=1`);
@@ -523,15 +523,15 @@ document.getElementById('LUOGO').addEventListener('change', async function() {
     
     if (data.length > 0) {
       // Luogo trovato (ma non nella lista ufficiale)
-      statusIcon.textContent = 'âš ï¸';
-      statusIcon.title = "LocalitÃ  trovata ma non nella lista ufficiale";
+      statusIcon.textContent = '⚠️';
+      statusIcon.title = "Località trovata ma non nella lista ufficiale";
     } else {
       // Luogo non riconosciuto
-      statusIcon.textContent = 'âŒ';
-      statusIcon.title = "LocalitÃ  non riconosciuta - verificare la digitazione";
+      statusIcon.textContent = '❌';
+      statusIcon.title = "Località non riconosciuta - verificare la digitazione";
     }
   } catch (error) {
-    statusIcon.textContent = 'â“';
+    statusIcon.textContent = '❓';
     statusIcon.title = "Errore di verifica";
     console.error("Errore geocoding:", error);
   }
