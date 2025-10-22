@@ -234,7 +234,7 @@
     <label for="ORA">Ora Prelievo</label>
     <input type="time" id="ORA" name="ORA" required>
 
-    <!-- Pulsante "Carica dati meteo" spostato QUI, subito dopo ORA -->
+    <!-- Pulsante "Carica dati meteo" -->
     <button type="button" class="btn-meteo" id="caricaMeteo">Carica dati meteo</button>
 
     <label for="VOLUME">Volume Aspirato (Mc)</label>
@@ -386,6 +386,7 @@ document.getElementById('modulo').addEventListener('submit', async (e) => {
   submitButton.textContent = 'Invio in corso...';
   submitButton.style.backgroundColor = '#6c757d';
 
+  // ✅ URL corretta SENZA spazi
   const url = 'https://script.google.com/macros/s/AKfycbwT4Ej8swHBgIqgOrsd23j0M1lJ0G2f0kznHxzGdhPl3RFFwhhn_1xTFywdwm80mZ0f/exec';
   const formData = new URLSearchParams(new FormData(e.target));
   
@@ -445,10 +446,7 @@ async function geocodeComune(nomeComune) {
   }
 }
 
-
-
-
-// FUNZIONE AGGIORNATA E CORRETTA
+// ✅ FUNZIONE CORRETTA: usa SOLO /forecast con past_days=92
 async function caricaDatiMeteo() {
   const luogoInput = document.getElementById('LUOGO').value;
   const dataInput = document.getElementById('DATA').value;
@@ -468,7 +466,6 @@ async function caricaDatiMeteo() {
   const dataPrelievo = new Date(`${dataInput}T${oraInput}:00`);
   const oraAttuale = new Date();
 
-  // Blocca se futura
   if (dataPrelievo > oraAttuale) {
     alert("Impossibile caricare i dati meteo: la data/ora non può essere nel futuro.");
     return;
@@ -480,7 +477,6 @@ async function caricaDatiMeteo() {
   const dataSenzaOra = new Date(dataInput);
   const diffGiorni = Math.floor((oggi - dataSenzaOra) / (1000 * 60 * 60 * 24));
 
-  // Open-Meteo: dati storici disponibili solo per gli ultimi 92 giorni
   if (diffGiorni > 92) {
     alert("Impossibile caricare i dati meteo: la data è troppo vecchia (oltre 92 giorni).");
     return;
@@ -494,35 +490,28 @@ async function caricaDatiMeteo() {
     const coordinate = await geocodeComune(luogoInput + ', Italia');
     const { lat, lon } = coordinate;
 
-    let apiUrl, meteoData;
-
-    if (diffGiorni <= 1) {
-      // Oggi o ieri: usa /forecast (include dati recenti)
-      apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,relative_humidity_2m,pressure_msl&timezone=Europe%2FRome&forecast_days=3`;
-    } else {
-      // Passato (fino a 92 giorni): usa /archive
-      apiUrl = `https://api.open-meteo.com/v1/archive?latitude=${lat}&longitude=${lon}&start_date=${dataInput}&end_date=${dataInput}&hourly=temperature_2m,relative_humidity_2m,pressure_msl&timezone=Europe%2FRome`;
-    }
+    // ✅ Usa SOLO /forecast con past_days=92 → include umidità per tutto il periodo!
+    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&past_days=92&hourly=temperature_2m,relative_humidity_2m,pressure_msl&timezone=Europe%2FRome`;
 
     const response = await fetch(apiUrl);
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      const text = await response.text();
+      console.error("Errore API:", text);
+      throw new Error(`Errore ${response.status}: dati non disponibili.`);
     }
 
-    meteoData = await response.json();
+    const meteoData = await response.json();
 
     if (!meteoData.hourly || !meteoData.hourly.time || meteoData.hourly.time.length === 0) {
-      throw new Error("Nessun dato meteo disponibile per questa data/ora");
+      throw new Error("Nessun dato meteo disponibile per questa data/ora.");
     }
 
-    // Cerca l'ora esatta o la più vicina
+    // Trova l'ora più vicina
     const targetTime = new Date(`${dataInput}T${oraInput}`);
     let bestIndex = 0;
     let minDiff = Infinity;
-
     for (let i = 0; i < meteoData.hourly.time.length; i++) {
-      const timeStr = meteoData.hourly.time[i];
-      const time = new Date(timeStr);
+      const time = new Date(meteoData.hourly.time[i]);
       const diff = Math.abs(time - targetTime);
       if (diff < minDiff) {
         minDiff = diff;
@@ -530,35 +519,26 @@ async function caricaDatiMeteo() {
       }
     }
 
-    // Verifica che i dati esistano per quell'indice
-    if (
-      meteoData.hourly.temperature_2m?.[bestIndex] == null ||
-      meteoData.hourly.pressure_msl?.[bestIndex] == null ||
-      meteoData.hourly.relative_humidity_2m?.[bestIndex] == null
-    ) {
-      throw new Error("Dati meteo incompleti per questa ora");
+    const temp = meteoData.hourly.temperature_2m?.[bestIndex];
+    const umid = meteoData.hourly.relative_humidity_2m?.[bestIndex];
+    const press = meteoData.hourly.pressure_msl?.[bestIndex];
+
+    if (temp == null || umid == null || press == null) {
+      throw new Error("Dati meteo incompleti per questa ora.");
     }
 
-    document.getElementById('TEMPERATURA').value = meteoData.hourly.temperature_2m[bestIndex].toFixed(1);
-    document.getElementById('PRESSIONE').value = meteoData.hourly.pressure_msl[bestIndex].toFixed(0);
-    document.getElementById('UMIDITA').value = meteoData.hourly.relative_humidity_2m[bestIndex].toFixed(0);
+    document.getElementById('TEMPERATURA').value = temp.toFixed(1);
+    document.getElementById('UMIDITA').value = umid.toFixed(0);
+    document.getElementById('PRESSIONE').value = press.toFixed(0);
 
   } catch (error) {
-    console.error('Errore dettagliato:', error);
+    console.error('Errore:', error);
     alert(`Errore nel caricamento meteo:\n${error.message}`);
   } finally {
     btnMeteo.disabled = false;
     btnMeteo.textContent = 'Carica dati meteo';
   }
 }
-
-
-
-
-
-
-
-
 
 document.getElementById('caricaMeteo').addEventListener('click', caricaDatiMeteo);
 
