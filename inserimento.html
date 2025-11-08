@@ -387,7 +387,7 @@ document.getElementById('modulo').addEventListener('submit', async (e) => {
   submitButton.style.backgroundColor = '#6c757d';
 
   // ✅ URL corretta SENZA spazi
-  const url = 'https://script.google.com/macros/s/AKfycbzKalmLsBENZ_3Q5aXP7LKCyDZwZ58JsjhnKtVgQWBoWLJt3lGQ67f84eJvUSjecmWU/exec';
+  const url = 'https://script.google.com/macros/s/AKfycbzKalmLsBENZ_3Q5aXP7LKCyDZwZ58JsjhnKtVgQWBoWLJt3lGQ67f84eJvUSjecmWU/exec;
   const formData = new URLSearchParams(new FormData(e.target));
   
   formData.forEach((value, key) => {
@@ -581,5 +581,6 @@ document.getElementById('LUOGO').addEventListener('change', async function() {
 
 </body>
 </html>
+
 
 
